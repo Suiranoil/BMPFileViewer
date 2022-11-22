@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Filter">
+      <UniqueIdentifier>{8B61D1B2-7703-FC88-60BE-0FDD4CFF82D9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Image">
+      <UniqueIdentifier>{886C650D-F480-8DBE-BD02-311E29D689EF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Filter\ImageFilter.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Image\Image.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Image\Pixel.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImageTab.h" />
+    <ClInclude Include="src\Image\OpenGLTexture.h" />
+    <ClInclude Include="src\Core\Window.h" />
+    <ClInclude Include="src\Filter\ContrastFilter.h" />
+    <ClInclude Include="src\Filter\RandomNoiseFilter.h" />
+    <ClInclude Include="src\Filter\MedianFilter.h" />
+    <ClInclude Include="src\Filter\StripeNoiseFilter.h" />
+    <ClInclude Include="src\Fonts\RobotoRegular.h" />
+    <ClInclude Include="src\Filter\StatisticalFilter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Filter\ImageFilter.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\ImGuiBuild.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Image\Image.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Image\Pixel.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageTab.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Image\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Core\Window.cpp" />
+    <ClCompile Include="src\Filter\ContrastFilter.cpp" />
+    <ClCompile Include="src\Filter\RandomNoiseFilter.cpp" />
+    <ClCompile Include="src\Filter\MedianFilter.cpp" />
+    <ClCompile Include="src\Filter\StripeNoiseFilter.cpp" />
+    <ClCompile Include="src\Fonts\RobotoRegular.cpp" />
+    <ClCompile Include="src\Filter\StatisticalFilter.cpp" />
+  </ItemGroup>
+</Project>

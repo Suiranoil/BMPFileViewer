@@ -1,0 +1,110 @@
+﻿#include "RandomNoiseFilter.h"
+
+#include <random>
+
+#include <imgui.h>
+
+RandomNoiseFilter::RandomNoiseFilter()
+	: ImageFilter("Random Noise")
+{
+}
+
+Image RandomNoiseFilter::Apply(const Image& source)
+{
+	Image result = source;
+
+	std::mt19937_64 rng(m_Seed);
+	std::uniform_int_distribution<uint32_t> xDist(0, source.GetWidth() - 1);
+	std::uniform_int_distribution<uint32_t> yDist(0, source.GetHeight() - 1);
+	std::uniform_int_distribution valDist(m_Min, m_Max);
+	
+	for (uint32_t i = 0; i < source.GetWidth() * source.GetHeight() * m_Amount; ++i)
+	{
+		uint32_t x = xDist(rng);
+		uint32_t y = yDist(rng);
+		
+		Pixel pixel = source.GetPixel(x, y);
+		
+		if (m_NoiseSpecificChannels)
+		{
+			int r = valDist(rng);
+			int g = valDist(rng);
+			int b = valDist(rng);
+
+			if (m_NoiseRed)
+				pixel.R = (uint8_t)std::clamp(pixel.R + r, 0, 255);
+
+			if (m_NoiseGreen)
+				pixel.G = (uint8_t)std::clamp(pixel.G + g, 0, 255);
+
+			if (m_NoiseBlue)
+				pixel.B = (uint8_t)std::clamp(pixel.B + b, 0, 255);
+		}
+		else
+		{
+			int value = valDist(rng);
+
+			pixel.R = (uint8_t)std::clamp(pixel.R + value, 0, 255);
+			pixel.G = (uint8_t)std::clamp(pixel.G + value, 0, 255);
+			pixel.B = (uint8_t)std::clamp(pixel.B + value, 0, 255);
+		}
+
+		result.SetPixel(x, y, pixel);
+	}
+
+	return result;
+}
+
+void RandomNoiseFilter::Reset()
+{
+	m_Min = -127;
+	m_Max = 128;
+
+	m_Amount = 0.0f;
+	m_Seed = 0LL;
+	
+	m_NoiseSpecificChannels = false;
+
+	m_NoiseRed = true;
+	m_NoiseGreen = true;
+	m_NoiseBlue = true;
+}
+
+void RandomNoiseFilter::OnImGuiRender()
+{
+	// min max sliders on same line
+	ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x * 0.5f - 40);
+	if(ImGui::SliderInt("Min", &m_Min, -255, 255))
+	{
+		if (m_Max < m_Min)
+			m_Max = m_Min;
+
+		m_isDirty |= true;
+	}
+	ImGui::SameLine();
+	if (ImGui::SliderInt("Max", &m_Max, -255, 255))
+	{
+		if (m_Min > m_Max)
+			m_Min = m_Max;
+
+		m_isDirty |= true;
+	}
+	ImGui::PopItemWidth();
+
+	m_isDirty |= ImGui::SliderFloat("Amount", &m_Amount, 0.0f, 1.0f);
+	m_isDirty |= ImGui::InputScalar("Seed", ImGuiDataType_U64, &m_Seed);
+
+	m_isDirty |= ImGui::Checkbox("Specific Channels", &m_NoiseSpecificChannels);
+	
+	if (m_NoiseSpecificChannels)
+	{
+		ImGui::Indent();
+		ImGui::Text("Noise Channels");
+		m_isDirty |= ImGui::Checkbox("R", &m_NoiseRed);
+		ImGui::SameLine();
+		m_isDirty |= ImGui::Checkbox("G", &m_NoiseGreen);
+		ImGui::SameLine();
+		m_isDirty |= ImGui::Checkbox("B", &m_NoiseBlue);
+		ImGui::Unindent();
+	}
+}
