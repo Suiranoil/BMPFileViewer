@@ -1,18 +1,13 @@
 ﻿#include "Application.h"
+#include "Input/FileDialog.h"
 
 #include "Fonts/RobotoRegular.h"
 
-#include <iostream>
-
 #include <glad/glad.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-
-#include <Windows.h>
 
 Application::Application()
 {
@@ -68,28 +63,14 @@ void Application::Update()
 		{
 			if (ImGui::MenuItem("Open"))
 			{
-				OPENFILENAMEA ofn;
-				ZeroMemory(&ofn, sizeof(ofn));
-				char szFile[260] = { 0 };
-				char szFileTitle[260] = { 0 };
-				ofn.lStructSize = sizeof(ofn);
-				ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)m_Window->GetNativeWindow());
-				ofn.lpstrFile = szFile;
-				ofn.lpstrFile[0] = '\0';
-				ofn.nMaxFile = sizeof(szFile);
-				ofn.lpstrFilter = "Bitmap Files (*.bmp)\0*.bmp\0";
-				ofn.nFilterIndex = 1;
-				ofn.lpstrFileTitle = szFileTitle;
-				ofn.nMaxFileTitle = sizeof(szFileTitle);
-				ofn.lpstrInitialDir = NULL;
-				ofn.Flags = OFN_DONTADDTORECENT | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+				const auto path = FileDialog::OpenFileDialog(L"BMP Files (*.bmp)\0*.bmp\0", m_Window->GetNativeWindow());
 
-				if (GetOpenFileNameA(&ofn))
+				if (!path.empty())
 				{
 					bool isAlreadyOpen = false;
 					for (const auto& tab : m_ImageTabs)
 					{
-						if (tab->GetName() == szFileTitle)
+						if (tab->GetName() == path.filename())
 						{
 							isAlreadyOpen = true;
 							break;
@@ -97,32 +78,17 @@ void Application::Update()
 					}
 
 					if (!isAlreadyOpen)
-						m_ImageTabs.emplace_back(std::make_unique<ImageTab>(ofn.lpstrFile));
+						m_ImageTabs.emplace_back(std::make_unique<ImageTab>(path.string()));
 				}
 			}
 			if (ImGui::MenuItem("Save As..."))
 			{
-				OPENFILENAMEA ofn;
-				ZeroMemory(&ofn, sizeof(ofn));
-				char szFile[260] = { 0 };
-				char szFileTitle[260] = { 0 };
-				ofn.lStructSize = sizeof(ofn);
-				ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)m_Window->GetNativeWindow());
-				ofn.lpstrFile = szFile;
-				ofn.lpstrFile[0] = '\0';
-				ofn.nMaxFile = sizeof(szFile);
-				ofn.lpstrFilter = "Bitmap Files (*.bmp)\0*.bmp\0";
-				ofn.lpstrDefExt = "bmp";
-				ofn.nFilterIndex = 1;
-				ofn.lpstrFileTitle = szFileTitle;
-				ofn.nMaxFileTitle = sizeof(szFileTitle);
-				ofn.lpstrInitialDir = NULL;
-				ofn.Flags = OFN_DONTADDTORECENT | OFN_PATHMUSTEXIST;
+				const auto path = FileDialog::SaveFileDialog(L"BMP Files (*.bmp)\0*.bmp\0", L"bmp", m_Window->GetNativeWindow());
 
 				if (!m_ImageTabs.empty())
 				{
-					if (GetSaveFileNameA(&ofn))
-						m_ImageTabs[m_SelectedTab]->SaveImage(ofn.lpstrFile);
+					if (!path.empty())
+						m_ImageTabs[m_SelectedTab]->SaveImage(path.string());
 				}
 			}
 			if (ImGui::MenuItem("Exit"))
