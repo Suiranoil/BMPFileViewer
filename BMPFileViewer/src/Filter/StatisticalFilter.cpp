@@ -61,9 +61,9 @@ Image StatisticalFilter::Apply(const Image& source)
 			diffBlue.emplace_back(meanBlue[i] - meanBlue[i + j]);
 		}
 
-		float avgDiffRed = std::accumulate(diffRed.begin(), diffRed.end(), 0.0f) / diffRed.size();
-		float avgDiffGreen = std::accumulate(diffGreen.begin(), diffGreen.end(), 0.0f) / diffGreen.size();
-		float avgDiffBlue = std::accumulate(diffBlue.begin(), diffBlue.end(), 0.0f) / diffBlue.size();
+		float avgDiffRed = (diffRed[m_Radius - 1] + diffRed[m_Radius]) / 2.0f;
+		float avgDiffGreen = (diffGreen[m_Radius - 1] + diffGreen[m_Radius]) / 2.0f;
+		float avgDiffBlue = (diffBlue[m_Radius - 1] + diffBlue[m_Radius]) / 2.0f;
 
 		int count = 0;
 		for (uint32_t j = 0; j < 2 * m_Radius; j++)
