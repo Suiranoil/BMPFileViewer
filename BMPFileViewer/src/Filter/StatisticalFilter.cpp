@@ -98,7 +98,7 @@ Image StatisticalFilter::Apply(const Image& source)
 				{
 					Pixel pixel = m_Direction == Direction::Vertical ? source.GetPixel(i, j) : source.GetPixel(j, i);
 
-					if (m_Method == Method::Average)
+					if (m_Method == Method::NeighborAverage)
 					{
 						Pixel pixelLeft = m_Direction == Direction::Vertical ? source.GetPixel(i - 1, j) : source.GetPixel(j, i - 1);
 						Pixel pixelRight = m_Direction == Direction::Vertical ? source.GetPixel(i + 1, j) : source.GetPixel(j, i + 1);
@@ -107,7 +107,7 @@ Image StatisticalFilter::Apply(const Image& source)
 						pixel.G = (pixelLeft.G + pixelRight.G) / 2;
 						pixel.B = (pixelLeft.B + pixelRight.B) / 2;
 					}
-					else if (m_Method == Method::Subtract)
+					else if (m_Method == Method::NeighborAverageSubtract)
 					{
 						pixel.R = (uint8_t)std::clamp((int)(pixel.R - avgDiffRed), 0, 255);
 						pixel.G = (uint8_t)std::clamp((int)(pixel.G - avgDiffGreen), 0, 255);
@@ -138,7 +138,7 @@ void StatisticalFilter::Reset()
 	m_Radius = 1;
 	m_Threshold = 0.05f;
 	m_Direction = Direction::Vertical;
-	m_Method = Method::Average;
+	m_Method = Method::NeighborAverage;
 	m_isMask = false;
 }
 
@@ -147,6 +147,6 @@ void StatisticalFilter::OnImGuiRender()
 	m_isDirty |= ImGui::SliderInt("Radius", &m_Radius, 1, 10);
 	m_isDirty |= ImGui::SliderFloat("Threshold", &m_Threshold, 0.0f, 1.0f);
 	m_isDirty |= ImGui::Combo("Direction", (int*)&m_Direction, "Vertical\0Horizontal\0");
-	m_isDirty |= ImGui::Combo("Method", (int*)&m_Method, "Average\0Subtract\0");
+	m_isDirty |= ImGui::Combo("Method", (int*)&m_Method, "Neighbor Average\0Neighbor Average Subtract\0");
 	m_isDirty |= ImGui::Checkbox("Mask", &m_isMask);
 }

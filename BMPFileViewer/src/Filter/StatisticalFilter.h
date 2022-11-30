@@ -13,14 +13,14 @@ private:
 
 	enum class Method : int
 	{
-		Average = 0,
-		Subtract
+		NeighborAverage = 0,
+		NeighborAverageSubtract
 	};
 
 	int m_Radius = 1;
 	float m_Threshold = 0.05f;
 	Direction m_Direction = Direction::Vertical;
-	Method m_Method = Method::Average;
+	Method m_Method = Method::NeighborAverage;
 	bool m_isMask = false;
 
 public:
