@@ -63,7 +63,7 @@ void Application::Update()
 		{
 			if (ImGui::MenuItem("Open"))
 			{
-				const auto path = FileDialog::OpenFileDialog(L"BMP Files (*.bmp)\0*.bmp\0", m_Window->GetNativeWindow());
+				const auto path = FileDialog::OpenFileDialog({{L"BMP Files (*.bmp)", L"*.bmp"}}, m_Window->GetNativeWindow());
 
 				if (!path.empty())
 				{
@@ -83,7 +83,7 @@ void Application::Update()
 			}
 			if (ImGui::MenuItem("Save As..."))
 			{
-				const auto path = FileDialog::SaveFileDialog(L"BMP Files (*.bmp)\0*.bmp\0", L"bmp", m_Window->GetNativeWindow());
+				const auto path = FileDialog::SaveFileDialog({{L"BMP Files (*.bmp)", L"*.bmp"}}, m_Window->GetNativeWindow());
 
 				if (!m_ImageTabs.empty())
 				{

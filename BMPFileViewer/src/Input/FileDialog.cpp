@@ -7,7 +7,23 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-std::filesystem::path FileDialog::OpenFileDialog(std::wstring_view filter, void* nativeWindow)
+std::vector<COMDLG_FILTERSPEC> FileDialogFilterToCOMDLG_FILTERSPEC(const std::vector<FileDialog::FileDialogFilter>& filters)
+{
+	std::vector<COMDLG_FILTERSPEC> result;
+	result.reserve(filters.size());
+
+	for (const auto& [name, filter] : filters)
+	{
+		COMDLG_FILTERSPEC spec;
+		spec.pszName = name.data();
+		spec.pszSpec = filter.data();
+		result.push_back(spec);
+	}
+
+	return result;
+}
+
+std::filesystem::path FileDialog::OpenFileDialog(const std::vector<FileDialogFilter>& filters, void* nativeWindow)
 {
 	IFileDialog* dialog;
 	HRESULT result = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
@@ -18,13 +34,9 @@ std::filesystem::path FileDialog::OpenFileDialog(std::wstring_view filter, void*
 		dialog->GetOptions(&flags);
 		dialog->SetOptions(flags | FOS_FORCEFILESYSTEM | FOS_NOCHANGEDIR | FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST);
 
-		IShellItem* item;
-		result = SHCreateItemFromParsingName(filter.data(), NULL, IID_PPV_ARGS(&item));
-
-		if (result == S_OK)
+		if (!filters.empty())
 		{
-			dialog->SetFileTypes(1, (COMDLG_FILTERSPEC*)&item);
-			item->Release();
+			dialog->SetFileTypes(filters.size(), FileDialogFilterToCOMDLG_FILTERSPEC(filters).data());
 		}
 
 		result = dialog->Show(glfwGetWin32Window((GLFWwindow*)nativeWindow));
@@ -90,7 +102,7 @@ std::filesystem::path FileDialog::OpenFolderDialog(void* nativeWindow)
 	return std::filesystem::path();
 }
 
-std::filesystem::path FileDialog::SaveFileDialog(std::wstring_view filter, std::wstring_view defaultExt, void* nativeWindow)
+std::filesystem::path FileDialog::SaveFileDialog(const std::vector<FileDialogFilter>& filters, void* nativeWindow)
 {
 	IFileDialog* dialog;
 	HRESULT result = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dialog));
@@ -101,16 +113,15 @@ std::filesystem::path FileDialog::SaveFileDialog(std::wstring_view filter, std::
 		dialog->GetOptions(&flags);
 		dialog->SetOptions(flags | FOS_FORCEFILESYSTEM | FOS_NOCHANGEDIR | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT);
 
-		IShellItem* item;
-		result = SHCreateItemFromParsingName(filter.data(), NULL, IID_PPV_ARGS(&item));
 
-		if (result == S_OK)
+		if (!filters.empty())
 		{
-			dialog->SetFileTypes(1, (COMDLG_FILTERSPEC*)&item);
-			item->Release();
-		}
+			dialog->SetFileTypes(filters.size(), FileDialogFilterToCOMDLG_FILTERSPEC(filters).data());
 
-		dialog->SetDefaultExtension(defaultExt.data());
+			std::wstring_view defaultExtension = filters[0].Filter;
+			defaultExtension.remove_prefix(defaultExtension.find(L'.'));
+			dialog->SetDefaultExtension(defaultExtension.data());
+		}
 
 		result = dialog->Show(glfwGetWin32Window((GLFWwindow*)nativeWindow));
 
