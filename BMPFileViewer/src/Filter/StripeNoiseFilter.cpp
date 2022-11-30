@@ -22,7 +22,7 @@ Image StripeNoiseFilter::Apply(const Image& source)
 
 	for (uint32_t i = 0; i < width; i++)
 	{
-		if (coordDist(rng) < m_Amount)
+		if (coordDist(rng) <= m_Amount)
 		{
 			int r = valDist(rng);
 			int g;
