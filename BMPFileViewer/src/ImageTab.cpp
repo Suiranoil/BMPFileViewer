@@ -104,17 +104,15 @@ void ImageTab::ImGuiRender()
 	ImGui::Separator();
 
 	m_ImageChanged = false;
-	int deleteFilter = -1;
+	size_t deleteFilter = -1;
 	
-	int swapFilterLeft = -1;
-	int swapFilterRight = -1;
+	size_t swapFilterLeft = -1;
+	size_t swapFilterRight = -1;
 
-	for (size_t i = 0; i < m_ImageFilters.size(); i++)
+	for (size_t i = 0; i < m_FilterStack.Size(); i++)
 	{
-		const auto& filter = m_ImageFilters[i];
-		ImGui::PushID((int)m_FilterIDs[i]);
-
-		bool isOpen;
+		auto& filter = m_FilterStack.GetFilter(i);
+		ImGui::PushID(i);
 
 		ImGui::BeginGroup();
 
@@ -126,16 +124,16 @@ void ImageTab::ImGuiRender()
 		ImGui::TableNextColumn();
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
 
-		bool isEnabled = filter->IsEnabled();
+		bool isEnabled = filter.IsEnabled();
 		if (ImGui::Checkbox("##Enabled", &isEnabled))
 			m_ImageChanged = true;
 
-		filter->SetEnabled(isEnabled);
+		filter.SetEnabled(isEnabled);
 
 		ImGui::PopStyleVar();
 
 		ImGui::TableNextColumn();
-		isOpen = ImGui::CollapsingHeader(filter->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+		bool isOpen = ImGui::CollapsingHeader(filter.GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 		
 		ImGui::TableNextColumn();
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
@@ -145,8 +143,8 @@ void ImageTab::ImGuiRender()
 		}
 		if (ImGui::ArrowButton("##Up", ImGuiDir_Up))
 		{
-			swapFilterLeft = (int)i;
-			swapFilterRight = (int)i - 1;
+			swapFilterLeft = i;
+			swapFilterRight = i - 1;
 
 			m_ImageChanged = true;
 		}
@@ -157,18 +155,18 @@ void ImageTab::ImGuiRender()
 
 		ImGui::SameLine();
 
-		if (i == m_ImageFilters.size() - 1)
+		if (i == m_FilterStack.Size() - 1)
 		{
 			ImGui::BeginDisabled();
 		}
 		if (ImGui::ArrowButton("##Down", ImGuiDir_Down))
 		{
-			swapFilterLeft = (int)i;
-			swapFilterRight = (int)i + 1;
+			swapFilterLeft = i;
+			swapFilterRight = i + 1;
 
 			m_ImageChanged = true;
 		}
-		if (i == m_ImageFilters.size() - 1)
+		if (i == m_FilterStack.Size() - 1)
 		{
 			ImGui::EndDisabled();
 		}
@@ -178,7 +176,7 @@ void ImageTab::ImGuiRender()
 		float sz = ImGui::GetFrameHeight();
 		if (ImGui::Button("X", ImVec2(sz, sz)))
 		{
-			deleteFilter = (int)i;
+			deleteFilter = i;
 			m_ImageChanged = true;
 		}
 
@@ -190,14 +188,14 @@ void ImageTab::ImGuiRender()
 		if (isOpen)
 		{
 			ImGui::Indent();
-			filter->SetDirty(false);
+			filter.SetDirty(false);
 
 			ImGui::PushID("##FilterSettings##");
 
-			filter->OnImGuiRender();
+			filter.OnImGuiRender();
 
-			if (filter->IsEnabled())
-				m_ImageChanged |= filter->IsDirty();
+			if (filter.IsEnabled())
+				m_ImageChanged |= filter.IsDirty();
 
 			ImGui::PopID();
 
@@ -218,23 +216,28 @@ void ImageTab::ImGuiRender()
 	{
 		if (ImGui::MenuItem("Contrast"))
 		{
-			AddFilter<ContrastFilter>();
+			m_FilterStack.PushFilter<ContrastFilter>();
+			m_ImageChanged = true;
 		}
 		if (ImGui::MenuItem("Random Noise"))
 		{
-			AddFilter<RandomNoiseFilter>();
+			m_FilterStack.PushFilter<RandomNoiseFilter>();
+			m_ImageChanged = true;
 		}
 		if (ImGui::MenuItem("Stripe Noise"))
 		{
-			AddFilter<StripeNoiseFilter>();
+			m_FilterStack.PushFilter<StripeNoiseFilter>();
+			m_ImageChanged = true;
 		}
 		if (ImGui::MenuItem("Median"))
 		{
-			AddFilter<MedianFilter>();
+			m_FilterStack.PushFilter<MedianFilter>();
+			m_ImageChanged = true;
 		}
 		if (ImGui::MenuItem("Statistical"))
 		{
-			AddFilter<StatisticalFilter>();
+			m_FilterStack.PushFilter<StatisticalFilter>();
+			m_ImageChanged = true;
 		}
 
 		ImGui::EndPopup();
@@ -242,28 +245,20 @@ void ImageTab::ImGuiRender()
 
 	ImGui::EndChild();
 
-	if (deleteFilter != -1)
+	if (deleteFilter != static_cast<size_t>(-1))
 	{
-		m_ImageFilters.erase(m_ImageFilters.begin() + deleteFilter);
-		m_FilterIDs.erase(m_FilterIDs.begin() + deleteFilter);
+		m_FilterStack.RemoveFilter(deleteFilter);
 	}
 
-	if (swapFilterLeft != -1 && swapFilterRight != -1)
+	if (swapFilterLeft != static_cast<size_t>(-1) && swapFilterRight != static_cast<size_t>(-1))
 	{
-		std::swap(m_ImageFilters[swapFilterLeft], m_ImageFilters[swapFilterRight]);
-		std::swap(m_FilterIDs[swapFilterLeft], m_FilterIDs[swapFilterRight]);
+		m_FilterStack.SwapFilters(swapFilterLeft, swapFilterRight);
 	}
 
 	if (m_ImageChanged)
 	{
 		m_Image = m_OriginalImage;
-		for (const auto& filter : m_ImageFilters)
-		{
-			if (filter->IsEnabled())
-			{
-				m_Image = filter->Apply(m_Image);
-			}
-		}
+		m_FilterStack.Apply(m_Image);
 
 		m_Texture.UploadImage(m_Image);
 	}

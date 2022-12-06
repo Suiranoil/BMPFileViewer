@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Filter\FilterStack.h" />
     <ClInclude Include="src\Input\FileDialog.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Window.h" />
@@ -111,6 +112,7 @@
     <ClInclude Include="src\ImageTab.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Filter\FilterStack.cpp" />
     <ClCompile Include="src\Input\FileDialog.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />

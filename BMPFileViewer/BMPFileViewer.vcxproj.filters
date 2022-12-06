@@ -32,6 +32,7 @@
     <ClInclude Include="src\Fonts\RobotoRegular.h" />
     <ClInclude Include="src\Filter\StatisticalFilter.h" />
     <ClInclude Include="src\Input\FileDialog.h" />
+    <ClInclude Include="src\Filter\FilterStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp" />
@@ -58,5 +59,6 @@
     <ClCompile Include="src\Fonts\RobotoRegular.cpp" />
     <ClCompile Include="src\Filter\StatisticalFilter.cpp" />
     <ClCompile Include="src\Input\FileDialog.cpp" />
+    <ClCompile Include="src\Filter\FilterStack.cpp" />
   </ItemGroup>
 </Project>

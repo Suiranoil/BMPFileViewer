@@ -1,11 +1,10 @@
 ﻿#pragma once
 
-#include "Filter/ImageFilter.h"
+#include "Filter/FilterStack.h"
 #include "Image/Image.h"
 #include "Image/OpenGLTexture.h"
 
 #include <memory>
-#include <vector>
 
 class ImageTab
 {
@@ -20,10 +19,7 @@ private:
 	float m_OffsetY = 0.0f;
 	float m_Zoom = 1.0f;
 
-	std::vector<std::unique_ptr<ImageFilter>> m_ImageFilters;
-
-	uint32_t m_FreeFilterID = 0;
-	std::vector<uint32_t> m_FilterIDs;
+	FilterStack m_FilterStack;
 
 	std::string m_Name;
 
@@ -36,14 +32,4 @@ public:
 	void SaveImage(std::string_view path) const;
 
 	void ImGuiRender();
-
-private:
-	template<typename T, typename... Args>
-	void AddFilter(Args&&... args)
-	{
-		m_ImageFilters.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
-		m_FilterIDs.emplace_back(m_FreeFilterID++);
-
-		m_ImageChanged = true;
-	}
 };
