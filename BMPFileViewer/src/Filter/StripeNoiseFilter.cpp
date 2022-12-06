@@ -20,10 +20,16 @@ Image StripeNoiseFilter::Apply(const Image& source)
 	uint32_t width = m_Direction == Direction::Vertical ? source.GetWidth() : source.GetHeight();
 	uint32_t height = m_Direction == Direction::Vertical ? source.GetHeight() : source.GetWidth();
 
+	uint32_t lastCoord = -1;
 	for (uint32_t i = 0; i < width; i++)
 	{
 		if (coordDist(rng) <= m_Amount)
 		{
+			if (lastCoord == i - 1 && i > 0)
+				continue;
+
+			lastCoord = i;
+
 			int r = valDist(rng);
 			int g;
 			int b;
