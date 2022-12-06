@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BMPFileViewer", "BMPFileViewer\BMPFileViewer.vcxproj", "{566F5606-C22F-D23C-8B6A-1BBAF7E91619}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "vendor\GLFW\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
@@ -10,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "vendor\ImGui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stb_image", "vendor\stb_image\stb_image.vcxproj", "{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "toml++", "vendor\tomlplusplus\toml++.vcxproj", "{0E287B5A-1168-43FD-B067-F6BE8E182A57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,8 +41,15 @@ Global
 		{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}.Debug|x64.Build.0 = Debug|x64
 		{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}.Release|x64.ActiveCfg = Release|x64
 		{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}.Release|x64.Build.0 = Release|x64
+		{0E287B5A-1168-43FD-B067-F6BE8E182A57}.Debug|x64.ActiveCfg = Debug|x64
+		{0E287B5A-1168-43FD-B067-F6BE8E182A57}.Debug|x64.Build.0 = Debug|x64
+		{0E287B5A-1168-43FD-B067-F6BE8E182A57}.Release|x64.ActiveCfg = Release|x64
+		{0E287B5A-1168-43FD-B067-F6BE8E182A57}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {19A9178D-DA4D-438A-BB9E-206E0D8326DB}
 	EndGlobalSection
 EndGlobal

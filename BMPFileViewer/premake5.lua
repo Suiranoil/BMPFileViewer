@@ -15,7 +15,8 @@ project "BMPFileViewer"
 		"../vendor/glfw/include",
 		"../vendor/glad/include",
 		"../vendor/stb_image/include",
-		"../vendor/imgui"
+		"../vendor/imgui",
+		"../vendor/tomlplusplus/include"
 	}
 
 	links
@@ -24,6 +25,7 @@ project "BMPFileViewer"
 		"GLAD",
 		"stb_image",
 		"ImGui",
+		"toml++",
 		"opengl32.lib"
 	}
 	

@@ -8,5 +8,6 @@ include "vendor/GLFW"
 include "vendor/Glad"
 include "vendor/stb_image"
 include "vendor/ImGui"
+include "vendor/tomlplusplus"
 
 include "BMPFileViewer"

@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\vendor\glfw\include;..\vendor\glad\include;..\vendor\stb_image\include;..\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\vendor\glfw\include;..\vendor\glad\include;..\vendor\stb_image\include;..\vendor\imgui;..\vendor\tomlplusplus\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -77,7 +77,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\vendor\glfw\include;..\vendor\glad\include;..\vendor\stb_image\include;..\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\vendor\glfw\include;..\vendor\glad\include;..\vendor\stb_image\include;..\vendor\imgui;..\vendor\tomlplusplus\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -95,11 +95,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Filter\FilterStack.h" />
-    <ClInclude Include="src\Input\FileDialog.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Filter\ContrastFilter.h" />
+    <ClInclude Include="src\Filter\FilterStack.h" />
     <ClInclude Include="src\Filter\ImageFilter.h" />
     <ClInclude Include="src\Filter\MedianFilter.h" />
     <ClInclude Include="src\Filter\RandomNoiseFilter.h" />
@@ -110,25 +109,26 @@
     <ClInclude Include="src\Image\OpenGLTexture.h" />
     <ClInclude Include="src\Image\Pixel.h" />
     <ClInclude Include="src\ImageTab.h" />
+    <ClInclude Include="src\Input\FileDialog.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Filter\FilterStack.cpp" />
-    <ClCompile Include="src\Input\FileDialog.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Filter\ContrastFilter.cpp" />
+    <ClCompile Include="src\Filter\FilterStack.cpp" />
     <ClCompile Include="src\Filter\ImageFilter.cpp" />
     <ClCompile Include="src\Filter\MedianFilter.cpp" />
     <ClCompile Include="src\Filter\RandomNoiseFilter.cpp" />
     <ClCompile Include="src\Filter\StatisticalFilter.cpp" />
     <ClCompile Include="src\Filter\StripeNoiseFilter.cpp" />
-    <ClCompile Include="src\Image\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Fonts\RobotoRegular.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Image\Image.cpp" />
+    <ClCompile Include="src\Image\OpenGLTexture.cpp" />
     <ClCompile Include="src\Image\Pixel.cpp" />
     <ClCompile Include="src\ImageTab.cpp" />
+    <ClCompile Include="src\Input\FileDialog.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Fonts\RobotoRegular.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\GLFW\GLFW.vcxproj">
@@ -142,6 +142,9 @@
     </ProjectReference>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\vendor\tomlplusplus\toml++.vcxproj">
+      <Project>{17A48B1E-0346-B6F4-EC00-CA48D8413D45}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
