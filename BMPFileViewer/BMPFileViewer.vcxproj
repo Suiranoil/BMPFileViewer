@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions);TOML_HEADER_ONLY;TOML_EXCEPTIONS=0</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\vendor\glfw\include;..\vendor\glad\include;..\vendor\stb_image\include;..\vendor\imgui;..\vendor\tomlplusplus\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -76,7 +76,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions);TOML_HEADER_ONLY;TOML_EXCEPTIONS=0</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\vendor\glfw\include;..\vendor\glad\include;..\vendor\stb_image\include;..\vendor\imgui;..\vendor\tomlplusplus\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
