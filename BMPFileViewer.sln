@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.4.33110.190
+VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BMPFileViewer", "BMPFileViewer\BMPFileViewer.vcxproj", "{566F5606-C22F-D23C-8B6A-1BBAF7E91619}"
 EndProject
@@ -50,6 +50,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {19A9178D-DA4D-438A-BB9E-206E0D8326DB}
+		SolutionGuid = {75DFF943-66F6-4BEE-B10A-B159A86A3DDD}
 	EndGlobalSection
 EndGlobal

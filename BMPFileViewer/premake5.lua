@@ -28,6 +28,12 @@ project "BMPFileViewer"
 		"toml++",
 		"opengl32.lib"
 	}
+
+	defines
+	{
+		"TOML_HEADER_ONLY",
+		"TOML_EXCEPTIONS=0"	
+	}
 	
 	filter "system:windows"
 		systemversion "latest"
