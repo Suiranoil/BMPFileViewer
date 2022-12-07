@@ -30,4 +30,7 @@ public:
 
 	void RemoveFilter(size_t index);
 	void SwapFilters(size_t index1, size_t index2);
+
+	void Serialize(toml::table& table) const;
+	void Deserialize(const toml::table& table);
 };
