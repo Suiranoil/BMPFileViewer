@@ -150,3 +150,21 @@ void StatisticalFilter::OnImGuiRender()
 	m_isDirty |= ImGui::Combo("Method", (int*)&m_Method, "Neighbor Average\0Neighbor Average Subtract\0");
 	m_isDirty |= ImGui::Checkbox("Mask", &m_isMask);
 }
+
+void StatisticalFilter::Serialize(toml::table& table) const
+{
+	table.insert("radius", m_Radius);
+	table.insert("threshold", m_Threshold);
+	table.insert("direction", (int)m_Direction);
+	table.insert("method", (int)m_Method);
+	table.insert("mask", m_isMask);
+}
+
+void StatisticalFilter::Deserialize(const toml::table& table)
+{
+	m_Radius = table["radius"].value_or(m_Radius);
+	m_Threshold = table["threshold"].value_or(m_Threshold);
+	m_Direction = (Direction)table["direction"].value_or((int)m_Direction);
+	m_Method = (Method)table["method"].value_or((int)m_Method);
+	m_isMask = table["mask"].value_or(m_isMask);
+}

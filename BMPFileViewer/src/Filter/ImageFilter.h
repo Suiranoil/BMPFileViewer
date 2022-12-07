@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include <toml++/toml.h>
+
 class ImageFilter
 {
 protected:
@@ -28,6 +30,9 @@ public:
 	virtual Image Apply(const Image& source) = 0;
 	virtual void Reset() = 0;
 	virtual void OnImGuiRender() = 0;
+
+	virtual void Serialize(toml::table& table) const = 0;
+	virtual void Deserialize(const toml::table& table) = 0;
 };
 
 

@@ -63,3 +63,13 @@ void MedianFilter::OnImGuiRender()
 {
 	m_isDirty |= ImGui::SliderInt("Radius", &m_Radius, 1, 10);
 }
+
+void MedianFilter::Serialize(toml::table& table) const
+{
+	table.insert("radius", m_Radius);
+}
+
+void MedianFilter::Deserialize(const toml::table& table)
+{
+	m_Radius = table["radius"].value_or(m_Radius);
+}

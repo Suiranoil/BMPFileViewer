@@ -108,3 +108,27 @@ void RandomNoiseFilter::OnImGuiRender()
 		ImGui::Unindent();
 	}
 }
+
+void RandomNoiseFilter::Serialize(toml::table& table) const
+{
+	table.insert("min", m_Min);
+	table.insert("max", m_Max);
+	table.insert("amount", m_Amount);
+	table.insert("seed", (int64_t)m_Seed);
+	table.insert("noise_specific_channels", toml::array{ m_NoiseSpecificChannels, m_NoiseRed, m_NoiseGreen, m_NoiseBlue });
+}
+
+void RandomNoiseFilter::Deserialize(const toml::table& table)
+{
+	m_Min = table["min"].value_or(m_Min);
+	m_Max = table["max"].value_or(m_Max);
+	m_Amount = table["amount"].value_or(m_Amount);
+	m_Seed = (uint64_t)table["seed"].value_or((int64_t)m_Seed);
+
+	auto& noiseSpecificChannels = *table["noise_specific_channels"].as_array();
+	
+	m_NoiseSpecificChannels = noiseSpecificChannels[0].value_or(m_NoiseSpecificChannels);
+	m_NoiseRed = noiseSpecificChannels[1].value_or(m_NoiseRed);
+	m_NoiseGreen = noiseSpecificChannels[2].value_or(m_NoiseGreen);
+	m_NoiseBlue = noiseSpecificChannels[3].value_or(m_NoiseBlue);
+}

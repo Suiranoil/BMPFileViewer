@@ -39,3 +39,13 @@ void ContrastFilter::OnImGuiRender()
 {
 	m_isDirty |= ImGui::SliderFloat("Value", &m_Contrast, 0.0f, 5.0f);
 }
+
+void ContrastFilter::Serialize(toml::table& table) const
+{
+	table.insert("contrast", m_Contrast);
+}
+
+void ContrastFilter::Deserialize(const toml::table& table)
+{
+	m_Contrast = table["contrast"].value_or(m_Contrast);
+}
