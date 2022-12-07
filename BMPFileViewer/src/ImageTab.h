@@ -35,4 +35,9 @@ public:
 
 	void SavePreset(std::string_view path) const;
 	void LoadPreset(std::string_view path);
+
+private:
+	void ShowHoveredPixelData() const;
+	void ProcessZoom();
+	void ProcessDrag();
 };

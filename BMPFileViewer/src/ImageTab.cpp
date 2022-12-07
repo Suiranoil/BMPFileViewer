@@ -25,6 +25,60 @@ void ImageTab::SaveImage(std::string_view path) const
 	stbi_write_bmp(path.data(), m_Image.GetWidth(), m_Image.GetHeight(), 4, m_Image.GetPixels());
 }
 
+void ImageTab::ShowHoveredPixelData() const
+{
+	ImVec2 mousePos = ImGui::GetMousePos();
+
+	mousePos.x -= ImGui::GetItemRectMin().x;
+	mousePos.y -= ImGui::GetItemRectMin().y;
+
+	mousePos.x /= m_Zoom;
+	mousePos.y /= m_Zoom;
+
+	if (mousePos.x >= 0 && mousePos.x < m_Image.GetWidth() && mousePos.y >= 0 && mousePos.y < m_Image.GetHeight())
+	{
+		Pixel pixel = m_Image.GetPixel((uint32_t)mousePos.x, (uint32_t)mousePos.y);
+
+		ImGui::BeginTooltip();
+		ImGui::ColorButton("##PixelColor", ImVec4(pixel.R / 255.0f, pixel.G / 255.0f, pixel.B / 255.0f, 1.0f),
+		                   ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoAlpha, ImVec2(20, 20));
+		ImGui::SameLine();
+		ImGui::Text("RGBA: (%03d, %03d, %03d, %03d)", pixel.R, pixel.G, pixel.B, pixel.A);
+		ImGui::Text("XY: (%d, %d)", (uint32_t)mousePos.x, (uint32_t)mousePos.y);
+		ImGui::EndTooltip();
+	}
+}
+
+void ImageTab::ProcessZoom()
+{
+	const float prevZoom = m_Zoom;
+	if (ImGui::GetIO().MouseWheel > 0)
+	{
+		m_Zoom += 0.1f;
+	}
+	else if (ImGui::GetIO().MouseWheel < 0)
+	{
+		m_Zoom -= 0.1f;
+	}
+	m_Zoom = std::clamp(m_Zoom, 0.1f, 5.0f);
+
+	const ImVec2 mousePos = ImGui::GetMousePos();
+	const auto absMousePos = ImVec2(mousePos.x - m_OffsetX, mousePos.y - m_OffsetY);
+	const auto relMousePos = ImVec2(absMousePos.x / prevZoom, absMousePos.y / prevZoom);
+	const auto newAbsMousePos = ImVec2(relMousePos.x * m_Zoom, relMousePos.y * m_Zoom);
+
+	m_OffsetX += absMousePos.x - newAbsMousePos.x;
+	m_OffsetY += absMousePos.y - newAbsMousePos.y;
+}
+
+void ImageTab::ProcessDrag()
+{
+	const ImVec2 delta = ImGui::GetIO().MouseDelta;
+
+	m_OffsetX += delta.x;
+	m_OffsetY += delta.y;
+}
+
 void ImageTab::ImGuiRender()
 {
 	constexpr float rightPanelWidth = 350.0f;
@@ -41,56 +95,17 @@ void ImageTab::ImGuiRender()
 	// show pixel data on hover
 	if (ImGui::IsItemHovered() && ImGui::IsKeyDown(ImGuiKey_LeftShift))
 	{
-		ImVec2 mousePos = ImGui::GetMousePos();
-
-		mousePos.x -= ImGui::GetItemRectMin().x;
-		mousePos.y -= ImGui::GetItemRectMin().y;
-
-		mousePos.x /= m_Zoom;
-		mousePos.y /= m_Zoom;
-
-		if (mousePos.x >= 0 && mousePos.x < m_Image.GetWidth() && mousePos.y >= 0 && mousePos.y < m_Image.GetHeight())
-		{
-			Pixel pixel = m_Image.GetPixel((uint32_t)mousePos.x, (uint32_t)mousePos.y);
-
-			ImGui::BeginTooltip();
-			ImGui::ColorButton("##PixelColor", ImVec4(pixel.R / 255.0f, pixel.G / 255.0f, pixel.B / 255.0f, 1.0f),
-				ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoAlpha, ImVec2(20, 20));
-			ImGui::SameLine();
-			ImGui::Text("RGBA: (%03d, %03d, %03d, %03d)", pixel.R, pixel.G, pixel.B, pixel.A);
-			ImGui::Text("XY: (%d, %d)", (uint32_t)mousePos.x, (uint32_t)mousePos.y);
-			ImGui::EndTooltip();
-		}
+		ShowHoveredPixelData();
 	}
 
 	if (ImGui::IsWindowHovered())
 	{
-		const float prevZoom = m_Zoom;
-		if (ImGui::GetIO().MouseWheel > 0)
+		ProcessZoom();
+
+		if (ImGui::IsMouseDragging(0))
 		{
-			m_Zoom += 0.1f;
+			ProcessDrag();
 		}
-		else if (ImGui::GetIO().MouseWheel < 0)
-		{
-			m_Zoom -= 0.1f;
-		}
-		m_Zoom = std::clamp(m_Zoom, 0.1f, 5.0f);
-
-		const ImVec2 mousePos = ImGui::GetMousePos();
-		const auto absMousePos = ImVec2(mousePos.x - m_OffsetX, mousePos.y - m_OffsetY);
-		const auto relMousePos = ImVec2(absMousePos.x / prevZoom, absMousePos.y / prevZoom);
-		const auto newAbsMousePos = ImVec2(relMousePos.x * m_Zoom, relMousePos.y * m_Zoom);
-
-		m_OffsetX += absMousePos.x - newAbsMousePos.x;
-		m_OffsetY += absMousePos.y - newAbsMousePos.y;
-	}
-
-	if (ImGui::IsMouseDragging(0) && ImGui::IsWindowHovered())
-	{
-		const ImVec2 delta = ImGui::GetIO().MouseDelta;
-
-		m_OffsetX += delta.x;
-		m_OffsetY += delta.y;
 	}
 
 	ImGui::EndChild();
