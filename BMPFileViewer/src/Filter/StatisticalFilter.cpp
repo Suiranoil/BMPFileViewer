@@ -142,13 +142,17 @@ void StatisticalFilter::Reset()
 	m_isMask = false;
 }
 
-void StatisticalFilter::OnImGuiRender()
+bool StatisticalFilter::RenderImGui()
 {
-	m_isDirty |= ImGui::SliderInt("Radius", &m_Radius, 1, 10);
-	m_isDirty |= ImGui::SliderFloat("Threshold", &m_Threshold, 0.0f, 1.0f);
-	m_isDirty |= ImGui::Combo("Direction", (int*)&m_Direction, "Vertical\0Horizontal\0");
-	m_isDirty |= ImGui::Combo("Method", (int*)&m_Method, "Neighbor Average\0Neighbor Average Subtract\0");
-	m_isDirty |= ImGui::Checkbox("Mask", &m_isMask);
+	bool changed = false;
+
+	changed |= ImGui::SliderInt("Radius", &m_Radius, 1, 10);
+	changed |= ImGui::SliderFloat("Threshold", &m_Threshold, 0.0f, 1.0f);
+	changed |= ImGui::Combo("Direction", (int*)&m_Direction, "Vertical\0Horizontal\0");
+	changed |= ImGui::Combo("Method", (int*)&m_Method, "Neighbor Average\0Neighbor Average Subtract\0");
+	changed |= ImGui::Checkbox("Mask", &m_isMask);
+
+	return changed;
 }
 
 void StatisticalFilter::Serialize(toml::table& table) const

@@ -59,9 +59,13 @@ void MedianFilter::Reset()
 	m_Radius = 1;
 }
 
-void MedianFilter::OnImGuiRender()
+bool MedianFilter::RenderImGui()
 {
-	m_isDirty |= ImGui::SliderInt("Radius", &m_Radius, 1, 10);
+	bool changed = false;
+
+	changed |= ImGui::SliderInt("Radius", &m_Radius, 1, 10);
+
+	return changed;
 }
 
 void MedianFilter::Serialize(toml::table& table) const

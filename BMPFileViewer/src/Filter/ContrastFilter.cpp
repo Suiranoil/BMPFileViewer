@@ -35,9 +35,13 @@ void ContrastFilter::Reset()
 	m_Contrast = 1.0f;
 }
 
-void ContrastFilter::OnImGuiRender()
+bool ContrastFilter::RenderImGui()
 {
-	m_isDirty |= ImGui::SliderFloat("Value", &m_Contrast, 0.0f, 5.0f);
+	bool changed = false;
+
+	changed |= ImGui::SliderFloat("Value", &m_Contrast, 0.0f, 5.0f);
+
+	return changed;
 }
 
 void ContrastFilter::Serialize(toml::table& table) const

@@ -12,7 +12,7 @@ public:
 
 	virtual Image Apply(const Image& source) override;
 	virtual void Reset() override;
-	virtual void OnImGuiRender() override;
+	virtual bool RenderImGui() override;
 
 	virtual void Serialize(toml::table& table) const override;
 	virtual void Deserialize(const toml::table& table) override;

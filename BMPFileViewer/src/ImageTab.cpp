@@ -201,14 +201,13 @@ void ImageTab::ImGuiRender()
 		if (isOpen)
 		{
 			ImGui::Indent();
-			filter.SetDirty(false);
 
 			ImGui::PushID("##FilterSettings##");
 
-			filter.OnImGuiRender();
+			bool isDirty = filter.RenderImGui();
 
 			if (filter.IsEnabled())
-				m_ImageChanged |= filter.IsDirty();
+				m_ImageChanged |= isDirty;
 
 			ImGui::PopID();
 

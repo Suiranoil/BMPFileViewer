@@ -90,15 +90,17 @@ void StripeNoiseFilter::Reset()
 	m_Direction = Direction::Vertical;
 }
 
-void StripeNoiseFilter::OnImGuiRender()
+bool StripeNoiseFilter::RenderImGui()
 {
+	bool changed = false;
+
 	ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x * 0.5f - 40);
 	if(ImGui::SliderInt("Min", &m_Min, -255, 255))
 	{
 		if (m_Max < m_Min)
 			m_Max = m_Min;
 
-		m_isDirty |= true;
+		changed = true;
 	}
 	ImGui::SameLine();
 	if (ImGui::SliderInt("Max", &m_Max, -255, 255))
@@ -106,28 +108,30 @@ void StripeNoiseFilter::OnImGuiRender()
 		if (m_Min > m_Max)
 			m_Min = m_Max;
 
-		m_isDirty |= true;
+		changed = true;
 	}
 	ImGui::PopItemWidth();
 
-	m_isDirty |= ImGui::SliderFloat("Amount", &m_Amount, 0.0f, 1.0f);
-	m_isDirty |= ImGui::InputScalar("Seed", ImGuiDataType_U64, &m_Seed);
+	changed |= ImGui::SliderFloat("Amount", &m_Amount, 0.0f, 1.0f);
+	changed |= ImGui::InputScalar("Seed", ImGuiDataType_U64, &m_Seed);
 
-	m_isDirty |= ImGui::Combo("Direction", (int*)&m_Direction, "Vertical\0Horizontal\0");
+	changed |= ImGui::Combo("Direction", (int*)&m_Direction, "Vertical\0Horizontal\0");
 
-	m_isDirty |= ImGui::Checkbox("Specific Channels", &m_NoiseSpecificChannels);
+	changed |= ImGui::Checkbox("Specific Channels", &m_NoiseSpecificChannels);
 
 	if (m_NoiseSpecificChannels)
 	{
 		ImGui::Indent();
 		ImGui::Text("Noise Channels");
-		m_isDirty |= ImGui::Checkbox("R", &m_NoiseRed);
+		changed |= ImGui::Checkbox("R", &m_NoiseRed);
 		ImGui::SameLine();
-		m_isDirty |= ImGui::Checkbox("G", &m_NoiseGreen);
+		changed |= ImGui::Checkbox("G", &m_NoiseGreen);
 		ImGui::SameLine();
-		m_isDirty |= ImGui::Checkbox("B", &m_NoiseBlue);
+		changed |= ImGui::Checkbox("B", &m_NoiseBlue);
 		ImGui::Unindent();
 	}
+
+	return changed;
 }
 
 void StripeNoiseFilter::Serialize(toml::table& table) const
