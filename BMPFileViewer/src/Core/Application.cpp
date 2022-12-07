@@ -98,6 +98,30 @@ void Application::Update()
 				
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Save preset"))
+			{
+				if (!m_ImageTabs.empty())
+				{
+					const auto path = FileDialog::SaveFileDialog({ {L"TOML Files (*.toml)", L"*.toml"} }, m_Window->GetNativeWindow());
+
+					if (!path.empty())
+						m_ImageTabs[m_SelectedTab]->SavePreset(path.string());
+				}
+			}
+			if (ImGui::MenuItem("Load preset"))
+			{
+				if (!m_ImageTabs.empty())
+				{
+					const auto path = FileDialog::OpenFileDialog({ {L"TOML Files (*.toml)", L"*.toml"} }, m_Window->GetNativeWindow());
+
+					if (!path.empty())
+						m_ImageTabs[m_SelectedTab]->LoadPreset(path.string());
+				}
+			}
+			ImGui::EndMenu();
+		}
 
 		menuBarSize = ImGui::GetWindowSize();
 		ImGui::EndMainMenuBar();

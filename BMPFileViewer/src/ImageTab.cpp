@@ -4,14 +4,13 @@
 #include "Filter/MedianFilter.h"
 #include "Filter/RandomNoiseFilter.h"
 #include "Filter/StripeNoiseFilter.h"
+#include "Filter/StatisticalFilter.h"
 
 #include <algorithm>
 
 #include <imgui.h>
 #include <iostream>
 #include <stb_image_write.h>
-
-#include "Filter/StatisticalFilter.h"
 
 ImageTab::ImageTab(std::string_view path)
 	: m_OriginalImage(path), m_Image(m_OriginalImage)
@@ -103,7 +102,6 @@ void ImageTab::ImGuiRender()
 	ImGui::Text("Image Filters");
 	ImGui::Separator();
 
-	m_ImageChanged = false;
 	size_t deleteFilter = -1;
 	
 	size_t swapFilterLeft = -1;
@@ -261,5 +259,27 @@ void ImageTab::ImGuiRender()
 		m_FilterStack.Apply(m_Image);
 
 		m_Texture.UploadImage(m_Image);
+		m_ImageChanged = false;
 	}
+}
+
+void ImageTab::SavePreset(std::string_view path) const
+{
+	toml::table preset;
+	
+	m_FilterStack.Serialize(preset);
+
+	std::ofstream file(path.data());
+	file << preset;
+}
+
+void ImageTab::LoadPreset(std::string_view path)
+{
+	toml::parse_result result = toml::parse_file(path);
+
+	if (!result)
+		return;
+
+	m_FilterStack.Deserialize(result);
+	m_ImageChanged = true;
 }

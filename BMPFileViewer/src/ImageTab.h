@@ -32,4 +32,7 @@ public:
 	void SaveImage(std::string_view path) const;
 
 	void ImGuiRender();
+
+	void SavePreset(std::string_view path) const;
+	void LoadPreset(std::string_view path);
 };
