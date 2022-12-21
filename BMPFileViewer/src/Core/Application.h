@@ -24,4 +24,6 @@ public:
 
 	void Update();
 	void Render();
+
+	const Window& GetWindow() const { return *m_Window; }
 };
