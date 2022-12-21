@@ -29,6 +29,7 @@ public:
 	void Apply(Image& image) const;
 
 	void RemoveFilter(size_t index);
+	void ClearFilters();
 	void SwapFilters(size_t index1, size_t index2);
 
 	void Serialize(toml::table& table) const;
