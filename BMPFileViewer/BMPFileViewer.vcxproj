@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\BatchEditWindow.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Filter\ContrastFilter.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="src\Input\FileDialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BatchEditWindow.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Filter\ContrastFilter.cpp" />

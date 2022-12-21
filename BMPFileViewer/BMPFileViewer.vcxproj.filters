@@ -64,6 +64,7 @@
     <ClInclude Include="src\Input\FileDialog.h">
       <Filter>Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\BatchEditWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -113,5 +114,6 @@
       <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\BatchEditWindow.cpp" />
   </ItemGroup>
 </Project>
