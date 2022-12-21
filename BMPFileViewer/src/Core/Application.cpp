@@ -10,6 +10,7 @@
 #include <backends/imgui_impl_opengl3.h>
 
 Application::Application()
+	: m_BatchEditWindow(*this)
 {
 	m_Window = std::make_unique<Window>("BMP File Viewer", 800, 600);
 
@@ -120,6 +121,12 @@ void Application::Update()
 						m_ImageTabs[m_SelectedTab]->LoadPreset(path.string());
 				}
 			}
+
+			if (ImGui::MenuItem("Batch edit"))
+			{
+				m_BatchEditWindow.Reset();
+				m_BatchEditWindow.Open();
+			}
 			ImGui::EndMenu();
 		}
 
@@ -151,6 +158,8 @@ void Application::Update()
 	}
 
 	ImGui::End();
+
+	m_BatchEditWindow.Render();
 	
 	ImGui::Render();
 
