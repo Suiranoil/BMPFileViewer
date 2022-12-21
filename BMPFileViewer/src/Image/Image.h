@@ -20,6 +20,8 @@ public:
 
 	Image& operator=(const Image& other);
 
+	void Save(std::string_view path) const;
+
 	[[nodiscard]] const Pixel& GetPixel(uint32_t x, uint32_t y) const { return m_Pixels[y * m_Width + x]; }
 	void SetPixel(uint32_t x, uint32_t y, const Pixel& pixel) { m_Pixels[y * m_Width + x] = pixel; }
 

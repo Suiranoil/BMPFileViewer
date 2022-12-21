@@ -2,6 +2,8 @@
 
 #include <stb_image.h>
 
+#include "stb_image_write.h"
+
 Image::Image(std::string_view path)
 	: m_Path(path)
 {
@@ -45,6 +47,11 @@ Image& Image::operator=(const Image& other)
 	std::memcpy(m_Pixels, other.m_Pixels, (size_t)m_Width * m_Height * sizeof(Pixel));
 
 	return *this;
+}
+
+void Image::Save(std::string_view path) const
+{
+	stbi_write_bmp(path.data(), m_Width, m_Height, 4, m_Pixels);
 }
 
 void Image::Fill(const Pixel& pixel)
